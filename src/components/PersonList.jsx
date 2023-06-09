@@ -1,6 +1,6 @@
 import { useEffect } from "react";
+import { FaTrashAlt } from "react-icons/fa";
 import personService from "../services/personService";
-import { FaTrash } from "react-icons/fa";
 
 function PersonList({ persons, setPersons }) {
   useEffect(() => {
@@ -22,12 +22,12 @@ function PersonList({ persons, setPersons }) {
   };
 
   return (
-    <ul className="bg-slate-700 text-white p-4">
+    <ul className="border-solid border-2 border-slate-500 p-4">
       {persons.map((person) => (
-        <li key={person.id} className="flex items-center">
-          • {person.name}
-          <FaTrash
-            className="hover:cursor-pointer"
+        <li key={person.id} className="flex items-center justify-between">
+          • {person.name} ({person.number})
+          <FaTrashAlt
+            className="hover: cursor-pointer"
             onClick={() => deletePerson(person.id)}
           />
         </li>
