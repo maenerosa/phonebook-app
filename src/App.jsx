@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import personService from "./services/personService";
 import Phonebook from "../pages/Phonebook";
-import LoginForm from "./components/LoginForm";
+import LoginForm from "../src/components/LoginForm";
 
 function App() {
   const [persons, setPersons] = useState([]);
