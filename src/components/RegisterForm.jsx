@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import loginService from "../services/loginService";
-import personService from "../services/personService";
+import userService from "../services/userService";
 
-function LoginForm({ user, setUser }) {
+function RegisterForm({ user }) {
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -12,32 +12,41 @@ function LoginForm({ user, setUser }) {
     if (user?.token) navigate("/");
   }, [user, navigate]);
 
-  const handleLogin = (e) => {
+  const handleRegistration = (e) => {
     e.preventDefault();
 
-    loginService
-      .login({ username, password })
-      .then((res) => {
-        window.localStorage.setItem("loggedPhonebookUser", JSON.stringify(res));
-        personService.setToken(res.token);
-        setUser(res);
+    userService
+      .register({ name, username, password })
+      .then((_res) => {
+        navigate("/login");
+        setName("");
         setUsername("");
         setPassword("");
       })
-      .catch((error) => alert(error.response.data.error));
+      .catch((error) => console.log(error));
   };
 
   return (
     <div>
       <h1 className="text-4xl mb-4 text-center font-bold">
-        Login your account
+        Register an account
       </h1>
       <form
-        onSubmit={handleLogin}
-        className="border-solid border-2 border-slate-500 p-4 m-4 flex flex-col gap-2"
+        onSubmit={handleRegistration}
+        className="m-4 p-4 flex flex-col gap-2 border-solid border-2 border-slate-500"
       >
         <div className="flex flex-col">
-          <label>Username</label>
+          Name
+          <input
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border-solid border-2 border-slate-500 p-2"
+          />
+        </div>
+        <div className="flex flex-col">
+          Username
           <input
             type="text"
             name="username"
@@ -47,7 +56,7 @@ function LoginForm({ user, setUser }) {
           />
         </div>
         <div className="flex flex-col">
-          <label>Password</label>
+          Password
           <input
             type="password"
             name="password"
@@ -56,18 +65,21 @@ function LoginForm({ user, setUser }) {
             className="border-solid border-2 border-slate-500 p-2"
           />
         </div>
-        <button type="submit" className="bg-slate-500 p-2 text-white font-bold">
-          Login
+        <button
+          type="submit"
+          className="bg-slate-500 p-2 mt-2 text-white font-bold"
+        >
+          Register
         </button>
       </form>
       <p className="text-center">
-        Don't have an account?{" "}
-        <Link to="/register" className="text-blue-500">
-          Register here.
+        Already have an account?{" "}
+        <Link to="/login" className="text-blue-500">
+          Login here.
         </Link>
       </p>
     </div>
   );
 }
 
-export default LoginForm;
+export default RegisterForm;

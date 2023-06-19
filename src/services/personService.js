@@ -1,32 +1,42 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/api/persons";
-
-let token = null;
+const apiClient = axios.create({
+  baseURL: "http://localhost:8080/api",
+  headers: {
+    common: {
+      "Content-Type": "multipart/form-data",
+    },
+  },
+});
 
 function setToken(newToken) {
-  token = `Bearer ${newToken}`;
+  apiClient.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 }
 
-function getPersons() {
-  return axios.get(baseUrl).then((res) => res.data);
+async function getPersons() {
+  const response = await apiClient.get("/persons");
+  return response.data;
 }
 
-function createPerson(person) {
-  const config = {
-    headers: { Authorization: token },
-  };
-
-  return axios.post(baseUrl, person, config).then((res) => res.data);
+async function createPerson(person) {
+  const response = await apiClient.post("/persons", person);
+  return response.data;
 }
 
-function deletePerson(id) {
-  return axios.delete(`${baseUrl}/${id}`).then((res) => res.status);
+async function updatePerson(id, person) {
+  const response = await apiClient.put(`/persons/${id}`, person);
+  return response.data;
+}
+
+async function deletePerson(id) {
+  const response = await apiClient.delete(`/persons/${id}`);
+  return response.status;
 }
 
 export default {
   getPersons,
   createPerson,
+  updatePerson,
   deletePerson,
   setToken,
 };
